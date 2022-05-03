@@ -1,3 +1,3 @@
-*[Home](/)
+* [Home](/)
 
-*[GUID](guide.md)
+* [GUID](guide.md)
