@@ -255,6 +255,11 @@ select sno from salebill where goodsno='gn001'
 except
 select sno from salebill where goodsno='gn002'
 )
+
+
+//多表联查
+select *from 表1 [ inner | cross ] join 表2 [ on过滤条件 ] [ where查询条件 ] 
+
 ```
 
 ## 13 数据类型
