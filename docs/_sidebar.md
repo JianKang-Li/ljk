@@ -6,6 +6,8 @@
 
 * [JavaScript](JavaScript.md)
 
+* [Vue3](vue3快速上手.md)
+
 * [Git](git.md)
 
 * [正则表达式](正则表达式.md)
