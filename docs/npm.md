@@ -103,4 +103,3 @@ nodemon 模块可在修改js代码后自动重启服务，不用手动重新node
 ## 10、检查包是否过时
 
 `npm outdated`
-
