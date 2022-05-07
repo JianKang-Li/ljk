@@ -1,5 +1,33 @@
 # SQL常用语句学习
 
+## 准备工作
+
+设置root用户密码
+
+```shell
+sudo cat /etc/mysql/debian.cnf
+ 
+获取到默认账号+密码
+user     = debian-sys-maint
+password = tZmePZ77d1K7NMWR
+ 
+ 
+mysql -u debian-sys-maint -p
+Enter password: 
+ 
+mysql> alter user 'root'@'localhost' identified with mysql_native_password by '123456';
+mysql> flush privileges;
+mysql> exit
+ 
+sudo service mysql restart
+mysql -u root -p
+Enter password: 
+ 
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+ 
+mysql> 
+```
+
 ## 1 创建数据库
 
 ```sql
