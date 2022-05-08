@@ -7,3 +7,6 @@ sudo chmod 777 ××× （每个人都有读和写以及执行的权限）
 
 查询ip
 ifconfig
+
+使用navtic连接虚拟机mysql时关闭防火墙
+systemctl stop firewalld
