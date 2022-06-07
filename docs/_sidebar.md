@@ -1,4 +1,4 @@
-* [Home](/)
+* [Home](Home.md)
 
 * [CSS](CSS.md)
 
