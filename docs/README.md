@@ -6,4 +6,4 @@
 
 记录本人的所有学习心得
 
-[在线文档](https://imeuser.github.io/ljk/)
+[在线文档]( https://jiankang-li.github.io/ljk/)
