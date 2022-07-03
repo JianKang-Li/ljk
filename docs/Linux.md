@@ -10,3 +10,24 @@ ifconfig
 
 使用navtic连接虚拟机mysql时关闭防火墙
 systemctl stop firewalld
+
+## 查看文件内容
+
+`cat`
+
+## 查看进程号
+
+`ps -aux`查看全部进程
+
+搜索进程 `ps -ef|grep 进程名`
+
+杀进程`kill 进程号`
+
+## apt
+
+`apt update`
+
+`apt install`
+
+`apt upgrade`
+
