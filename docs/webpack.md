@@ -1,4 +1,4 @@
-# webpack
+# webpack5基础使用
 
 ## 5 大核心概念
 
@@ -462,7 +462,242 @@ module.exports = {
 };
 ```
 
-使用自定义的webpack.config.js文件
+使用自定义的webpack.config.dev.js文件
 命令：`npx webpack serve --config 自定义文件路径`
 
 ## 生产模式
+
+命令：`npx webpack --config 自定义文件路径`
+**生产模式不需要服务器**
+
+## css 处理
+
+### 提取CSS成单独文件
+
+下载包`npm i mini-css-extract-plugin -D`
+
+配置：
+
+```js
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+rules: [
+    {
+      // 用来匹配 .css 结尾的文件
+      test: /\.css$/,
+      // use 数组里面 Loader 执行顺序是从右到左
+      use: [MiniCssExtractPlugin.loader, "css-loader"],
+    },
+    {
+      test: /\.less$/,
+      use: [MiniCssExtractPlugin.loader, "css-loader", "less-loader"],
+    },
+    {
+      test: /\.s[ac]ss$/,
+      use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+    },
+    {
+      test: /\.styl$/,
+      use: [MiniCssExtractPlugin.loader, "css-loader", "stylus-loader"],
+    },
+],
+plugins: [
+    // 提取css成单独文件
+    new MiniCssExtractPlugin({
+      // 定义输出文件名和目录
+      filename: "static/css/main.css",
+    }),
+  ],
+```
+
+### CSS兼容性处理
+
+下载包`npm i postcss-loader postcss postcss-preset-env -D`
+
+配置：
+
+```js
+use: [
+  MiniCssExtractPlugin.loader,
+  "css-loader",
+  {
+    loader: "postcss-loader",
+    options: {
+      postcssOptions: {
+        plugins: [
+          "postcss-preset-env", // 能解决大多数样式兼容性问题
+        ],
+      },
+    },
+  },
+],
+```
+
+**在css-loader后less-loader前**
+
+需要在package.json中设置
+
+```json
+"browserslist": [
+  "ie>=8"
+]
+```
+
+实际开发中的设置
+
+```json
+"browserslist": [
+  "last 2 version", 
+  "> 1%",
+  "not dead"
+]
+```
+
+### CSS压缩
+
+安装：`npm i css-minimizer-webpack-plugin -D`
+
+配置：
+
+```js
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+new CssMinimizerPlugin(),
+```
+
+**在生产环境下默认开启html和js压缩**
+
+## 生产环境下webpack.config.prod.js完整配置
+
+```js
+const path = require("path")
+// 导入插件
+const ESLintWebpackPlugin = require("eslint-webpack-plugin");
+const HtmlwebpackPlugin = require("html-webpack-plugin")
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+
+// 获取处理样式loader
+function getStyleLoader(pre) {
+  return [
+    MiniCssExtractPlugin.loader,
+    "css-loader",
+    {
+      loader: "postcss-loader",
+      options: {
+        postcssOptions: {
+          plugins: [
+            "postcss-preset-env", // 能解决大多数样式兼容性问题
+          ],
+        },
+      },
+    },
+    pre,
+  ].filter(Boolean);
+}
+
+
+
+module.exports = {
+  // 入口
+  entry: "./src/main.js",//相对路径
+  // 输出
+  output: {
+    // 输出路径,所有打包的文件输出目录
+    path: path.resolve(__dirname, "../dist"),//绝对路径
+    // 输出名称,入口文件打包输出的文件名
+    filename: "static/js/main.js",
+    // 自动清空上次打包结果
+    // 打包前将path目录清空
+    clean: true,
+  },
+  // 加载器
+  module: {
+    rules: [
+      {
+        //只检测xxx文件
+        test: /\.css$/,
+        // 使用什么loader，执行顺序（从下到上）
+        // use: [
+        //   // 将js中的css通过创建style标签添加到html文件中生效
+        //   "style-loader",
+        //   // 将css资源编译成commonjs的模块到js中
+        //   "css-loader"],
+        use: getStyleLoader(),
+      },
+      {
+        //只检测xxx文件
+        test: /\.less$/,
+        // 使用什么loader，执行顺序（从下到上）
+        // use: [
+        //   // 将js中的css通过创建style标签添加到html文件中生效
+        //   "style-loader",
+        //   // 将css资源编译成commonjs的模块到js中
+        //   "css-loader",
+        //   // 将less文件编译成css文件
+        //   "less-loader"],
+        use: getStyleLoader("less-loader"),
+      },
+      {
+        test: /\.(png|jpe?g|gif|webp|svg)$/,
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            // 小于10kb转base64
+            // 减少请求数量，体积会变大一点
+            maxSize: 10 * 1024 // 10kb
+          }
+        },
+        generator: {
+          //输出图片名称 :10代表取前十位hash值
+          filename: 'static/images/[hash:10][ext][query]'
+        }
+      },
+      {
+        test: /\.(ttf|woff2?|mp3|mp4|avi)$/,
+        // 原封不动输出
+        type: 'asset/resource',
+        generator: {
+          //输出名称 
+          filename: 'static/media/[hash:10][ext][query]'
+        }
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/, // 排除node_modules代码不编译
+        loader: "babel-loader",
+        // options: {
+        //   presets: ["@babel/preset-env"]
+        // }
+      }
+    ],
+  },
+  // 插件
+  plugins: [
+    new ESLintWebpackPlugin({
+      // 指定检查文件的根目录
+      context: path.resolve(__dirname, "../src")
+    }),
+    new HtmlwebpackPlugin({
+      // 模板
+      template: path.resolve(__dirname, "../public/index.html")
+    }),
+    // 提取css成单独文件
+    new MiniCssExtractPlugin({
+      // 定义输出文件名和目录
+      filename: "static/css/main.css",
+    }),
+    new CssMinimizerPlugin(),
+  ],
+  // 开发服务器
+  // devServer: {
+  //   host: "localhost", // 启动服务器域名
+  //   port: "3000", // 启动服务器端口号
+  //   open: true, // 是否自动打开浏览器
+  // },
+  // 关闭warning
+  performance: {
+    hints: false
+  },
+  // 模式
+  mode: "production",
+};
+```
