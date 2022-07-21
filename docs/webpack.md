@@ -22,6 +22,8 @@ webpack 本身只能处理 js、json 等资源，其他资源需要借助 loader
 
 **图片，字体，css，less等用loader，js，html用插件，插件用new，loader用对象配置**
 
+官方网站：[webpack](https://www.webpackjs.com/)  [babel](https://www.babeljs.cn/)  [eslint](http://eslint.cn/)
+
 ## 安装
 
 `npm i webpack webpack-cli -D`
@@ -29,6 +31,23 @@ webpack 本身只能处理 js、json 等资源，其他资源需要借助 loader
 ## 启动
 
 `npx webpack ./src/main.js --mode=development production`
+
+
+
+## 插件
+
+| 插件                           | github                                                       | 描述                                                         |
+| ------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| webpack-manifest-plugin        | [github](https://github.com/shellscape/webpack-manifest-plugin) | 将 manifest 数据提取为一个 json 文件以供使用                 |
+| html-webpack-plugin            | [github](https://github.com/jantimon/html-webpack-plugin)    | 生成HTML文件                                                 |
+| mini-css-extract-plugin        | [github](https://github.com/webpack-contrib/mini-css-extract-plugin) | 用于将 CSS 从主应用程序中分离                                |
+| webpack-bundle-analyzer        | [github](https://github.com/webpack-contrib/webpack-bundle-analyzer) | 它将 bundle 内容展示为一个便捷的、交互式、可缩放的树状图形式。 |
+| webpack-dev-server             | [github](https://github.com/webpack/webpack-dev-server)      | 提供 live reloading 模式的开发服务器                         |
+| eslint-webpack-plugin          |                                                              | js代码规则检查                                               |
+| @vue/preload-webpack-plugin    |                                                              | preload/prefetch实现                                         |
+| image-minimizer-webpack-plugin |                                                              | 图片无损压缩                                                 |
+| terser-webpack-plugin          |                                                              | 多线程打包                                                   |
+| workbox-webpack-plugin         |                                                              | 离线访问                                                     |
 
 ## 配置文件（webpack.config.js）
 
@@ -1225,3 +1244,181 @@ output: {
 - 导入`const PreloadWebpackPlugin = require('@vue/preload-webpack-plugin');`
 
 - 使用`new PreloadWebpackPlugin({rel: 'preload',as: 'script',// rel: 'prefetch' // prefetch兼容性更差})`
+
+
+
+#### Network Cache
+
+将来开发时我们对静态资源会使用缓存来优化，这样浏览器第二次请求资源就能读取缓存了，速度很快。
+
+但是这样的话就会有一个问题, 因为前后输出的文件名是一样的，都叫 main.js，一旦将来发布新版本，因为文件名没有变化导致浏览器会直接读取缓存，不会加载新资源，项目也就没法更新了。
+
+所以我们从文件名入手，确保更新前后文件名不一样，这样就可以做缓存了。
+
+它们都会生成一个唯一的 hash 值。
+
+- fullhash（webpack4 是 hash）
+
+每次修改任何一个文件，所有文件名的 hash 至都将改变。所以一旦修改了任何一个文件，整个项目的文件缓存都将失效。
+
+- chunkhash
+
+根据不同的入口文件(Entry)进行依赖文件解析、构建对应的 chunk，生成对应的哈希值。我们 js 和 css 是同一个引入，会共享一个 hash 值。
+
+- contenthash
+
+根据文件内容生成 hash 值，只有文件内容变化了，hash 值才会变化。所有文件 hash 值是独享且不同的。
+
+使用
+
+```js
+//output:
+filename: "static/js/[name].[contenthash:8].js", // 入口文件打包输出资源命名方式
+chunkFilename: "static/js/[name].[contenthash:8].chunk.js", // 动态导入输出资源命名方式
+
+//css:
+filename: "static/css/[name].[contenthash:8].css",
+chunkFilename: "static/css/[name].[contenthash:8].chunk.css",
+```
+
+- 问题：
+
+当我们修改 math.js 文件再重新打包的时候，因为 contenthash 原因，math.js 文件 hash 值发生了变化（这是正常的）。
+
+但是 main.js 文件的 hash 值也发生了变化，这会导致 main.js 的缓存失效。明明我们只修改 math.js, 为什么 main.js 也会变身变化呢？
+
+- 原因：
+  - 更新前：math.xxx.js, main.js 引用的 math.xxx.js
+  - 更新后：math.yyy.js, main.js 引用的 math.yyy.js, 文件名发生了变化，间接导致 main.js 也发生了变化
+- 解决：
+
+将 hash 值单独保管在一个 runtime 文件中。
+
+我们最终输出三个文件：main、math、runtime。当 math 文件发送变化，变化的是 math 和 runtime 文件，main 不变。
+
+runtime 文件只保存文件的 hash 值和它们与文件关系，整个文件体积就比较小，所以变化重新请求的代价也小。
+
+```js
+optimization: {
+    // 提取runtime文件
+    runtimeChunk: {
+        name: (entrypoint) => `runtime~${entrypoint.name}`, // runtime文件命名规则
+    },
+}
+```
+
+#### Core-js
+
+过去我们使用 babel 对 js 代码进行了兼容性处理，其中使用@babel/preset-env 智能预设来处理兼容性问题。
+
+它能将 ES6 的一些语法进行编译转换，比如箭头函数、点点点运算符等。但是如果是 async 函数、promise 对象、数组的一些方法（includes）等，它没办法处理。
+
+所以此时我们 js 代码仍然存在兼容性问题，一旦遇到低版本浏览器会直接报错。所以我们想要将 js 兼容性问题彻底解决
+
+`core-js` 是专门用来做 ES6 以及以上 API 的 `polyfill`。
+
+`polyfill`翻译过来叫做垫片/补丁。就是用社区上提供的一段代码，让我们在不兼容某些新特性的浏览器上，使用该新特性。
+
+下载：
+
+`npm i @babel/eslint-parser -D`
+
+```js
+//.eslintrc.js
+parser: "@babel/eslint-parser", // 支持最新的最终 ECMAScript 标准
+```
+
+全部引入：
+
+`npm i core-js`
+
+main.js
+
+```js
+import "core-js";
+```
+
+
+
+按需引入：
+
+main.js
+
+```js
+import "core-js/es/promise";
+```
+
+自动按需引入:
+
+- babel.config.js
+
+```js
+module.exports = {
+  // 智能预设：能够编译ES6语法
+  presets: [
+    [
+      "@babel/preset-env",
+      // 按需加载core-js的polyfill
+      { useBuiltIns: "usage", corejs: { version: "3", proposals: true } },
+    ],
+  ],
+};
+```
+
+#### PWA
+
+开发 Web App 项目，项目一旦处于网络离线情况，就没法访问了。
+
+我们希望给项目提供离线体验。
+
+渐进式网络应用程序(progressive web application - PWA)：是一种可以提供类似于 native app(原生应用程序) 体验的 Web App 的技术。
+
+其中最重要的是，在 **离线(offline)** 时应用程序能够继续运行功能。
+
+内部通过 Service Workers 技术实现的。
+
+安装：
+
+`npm i workbox-webpack-plugin -D`
+
+配置：
+
+webpack.config.prod.js
+
+```js
+const WorkboxPlugin = require("workbox-webpack-plugin");
+
+new WorkboxPlugin.GenerateSW({
+      // 这些选项帮助快速启用 ServiceWorkers
+      // 不允许遗留任何“旧的” ServiceWorkers
+      clientsClaim: true,
+      skipWaiting: true,
+      maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,//设置最大文件大小
+    }),
+```
+
+
+
+main.js
+
+```js
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then((registration) => {
+        console.log("SW registered: ", registration);
+      })
+      .catch((registrationError) => {
+        console.log("SW registration failed: ", registrationError);
+      });
+  });
+}
+```
+
+解决路径问题：
+
+安装：`npm i serve -g`
+
+`serve  文件夹名`
+
