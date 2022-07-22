@@ -32,8 +32,6 @@ webpack 本身只能处理 js、json 等资源，其他资源需要借助 loader
 
 `npx webpack ./src/main.js --mode=development production`
 
-
-
 ## 插件
 
 | 插件                           | github                                                       | 描述                                                         |
@@ -1245,8 +1243,6 @@ output: {
 
 - 使用`new PreloadWebpackPlugin({rel: 'preload',as: 'script',// rel: 'prefetch' // prefetch兼容性更差})`
 
-
-
 #### Network Cache
 
 将来开发时我们对静态资源会使用缓存来优化，这样浏览器第二次请求资源就能读取缓存了，速度很快。
@@ -1338,8 +1334,6 @@ main.js
 import "core-js";
 ```
 
-
-
 按需引入：
 
 main.js
@@ -1397,8 +1391,6 @@ new WorkboxPlugin.GenerateSW({
     }),
 ```
 
-
-
 main.js
 
 ```js
@@ -1421,4 +1413,3 @@ if ("serviceWorker" in navigator) {
 安装：`npm i serve -g`
 
 `serve  文件夹名`
-
