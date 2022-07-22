@@ -2,6 +2,7 @@
 * [CSS](CSS.md)
 * [Less](less.md)
 * [JavaScript](JavaScript.md)
+* [TypeScript](TypeScript.md)
 * [webpack](webpack.md)
 * [Vue3](vue3快速上手.md)
 * [npm](npm.md)
