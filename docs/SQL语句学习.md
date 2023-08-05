@@ -1,0 +1,661 @@
+# SQL常用语句学习
+
+## 准备工作
+
+设置root用户密码
+
+```shell
+sudo cat /etc/mysql/debian.cnf
+ 
+获取到默认账号+密码
+user     = debian-sys-maint
+password = tZmePZ77d1K7NMWR
+ 
+ 
+mysql -u debian-sys-maint -p
+Enter password: 
+ 
+mysql> alter user 'root'@'localhost' identified with mysql_native_password by '123456';
+mysql> flush privileges;
+mysql> exit
+ 
+sudo service mysql restart
+mysql -u root -p
+Enter password: 
+ 
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+ 
+mysql> 
+```
+
+## 1 创建数据库
+
+```sql
+create database+数据库名;
+
+更改数据库名字
+ALTER DATABASE test
+modify name= test_1
+```
+
+## 2 使用数据库
+
+```sql
+use+数据库名;
+```
+
+## 3 查看数据库
+
+```sql
+查看mySQL中有哪些数据库：
+show databases;
+```
+
+## 4 删除数据库
+
+```sql
+drop database + 数据库名;
+```
+
+## 5 创建表格
+
+```sql
+create table if not exists + 表名(列名+类型,
+primary key(列名(,列名)),
+constraint fk foreign key (sno,cno)
+references student(sno)
+references c(cno));
+
+
+//为表添加约束
+1 添加主键
+alter table table_name
+add constraint pk_yg primary key(列名);
+
+2 添加外码
+alter table table_name
+add constraint fk_xinji foreign key(薪级编号) references 薪资表(薪级编号);
+
+3 添加列
+alter table table_name
+add cat_categoryNo varchar(20);
+```
+
+## 6 查看表
+
+```sql
+show tables;
+```
+
+## 7 查看表创建
+
+```sql
+show create table +表名;
+```
+
+## 8 添加数据
+
+```sql
+insert into + 表名 (列名,列名,…,列名) values(列名对应值);或
+Insert into student values(直接按照建表时列名的顺序写);
+```
+
+## 9 查询表的内容
+
+```mysql
+select * from + 表名;
+
+//按年份
+YEAR(列名)='年份'
+
+//按月份
+month(date)='9'
+
+//按日期
+DAY(happentime)='01'
+
+
+
+//集合查询
+
+在两个查询语句之间加上连接词
+union//并
+intersect//交
+except//差
+//查询mis专业，出生晚于1991年的学生信息
+select * from student where major='MIS'
+intersect
+select * from student where birthyear>1991
+```
+
+- 主键约束(primary key)
+  - 被标记为主键的列,数据不能重复
+  - 原则上一个表只能有一列被标记为主键
+- 自增约束(auto_increment)
+  - 将该列设置为自增字段(相对于上一行+1),一般和主键放在一起设置
+- 非空约束(not null)
+  - 被标记的列不能为空
+- 唯一约束(unique)
+  - 被标记的列值不能重复 可以标记多行
+
+## 10 更新数据
+
+```sql
+update teacher
+set address = '北京'
+where name = '赵六';
+```
+
+## 11 删除
+
+```sql
+delete from teacher
+where name = '赵六';
+
+--启用/禁用指定表所有外键约束   
+alter table tbname  NOCHECK constraint all  
+alter table tbname  CHECK constraint all
+  
+--禁用/恢复某个表的某个触发器
+ALTER TABLE tbname DISABLE TRIGGER trigname
+ALTER TABLE tbname ENABLE TRIGGER trigname
+  
+--禁用恢复某个表上的所有触发器
+ALTER TABLE tbname DISABLE TRIGGER all
+ALTER TABLE tbname ENABLE TRIGGER all
+（**Mysql中**）
+//关闭外键检测
+SET FOREIGN_KEY_CHECKS=0;
+//开启外键检测
+SET FOREIGN_KEY_CHECKS=1;
+
+//删除表
+drop table 表名
+```
+
+## 12 查询
+
+```sql
+select *
+from teacher;
+
+结果只显示个别几列
+select name,address
+from teacher;
+
+后面可以跟where子句
+select name,gender
+from teacher where tid > 2;
+
+select * from teacher
+where tid > 1 and gender = '女';
+
+select *
+from teacher
+where tid > 2 or gender = '男';
+
+where后面可以加order by排序
+order by 列名 [排序方式]
+select *
+from teacher
+where tid > 2 or gender = '男'
+order by tid desc ;
+
+limit+要显示的数量
+limit 从第几行开始,显示多少行
+select *
+from teacher
+where tid > 2 or gender = '男'
+order by tid desc
+limit 2,1;
+
+//分组查询
+select *
+from teacher
+group by depart;
+
+HAVING 子句
+//在 SQL 中增加 HAVING 子句原因是，WHERE 关键字无法与聚合函数一起使用。
+//HAVING 子句可以让我们筛选分组后的各组数据。
+
+//员工数超过3人的部门的最高薪资和最低薪资
+select depart,max(salary),min(salary),count(*)
+from employee1
+group by depart
+having count(*) > 3;
+
+
+
+//范围查询
+between...and....:在...之间
+select *
+from Employee1
+where salary between 6000 and 12000;
+
+
+//集合查询in/not in:是否存在
+select *
+from Employee1
+where depart in ('市场部','人事部');
+
+//like:模糊查询
+select *
+from Employee1
+where name like '张%'; //%后面只是占位 不算位数 代表一串字符
+
+select *
+from Employee1
+where name like '张_'; //_代表一个字符
+
+
+//TOP查询(my sql 中为limit查询)(此方法用于sql中)
+top n [percent] [with ties]
+SELECT TOP number|percent column_name(s)
+FROM table_name
+
+
+
+去重
+distinct
+
+
+//交查询
+select sno from salebill
+where sno in (
+select sno from salebill where goodsno='gn001'
+intersect
+select sno from salebill where goodsno='gn002'
+)group by sno
+
+
+//并查询
+select distinct sno from salebill
+where sno in (
+select sno from salebill where goodsno='gn001'
+union
+select sno from salebill where goodsno='gn002'
+)
+
+//差查询
+select distinct sno from salebill
+where sno in (
+select sno from salebill where goodsno='gn001'
+except
+select sno from salebill where goodsno='gn002'
+)
+
+
+//多表联查
+select *from 表1 [ inner | cross ] join 表2 [ on过滤条件 ] [ where查询条件 ] 
+
+```
+
+## 13 数据类型
+
+| 数据类型                       | 含义                                                         |
+| ------------------------------ | ------------------------------------------------------------ |
+| CHAR(n) ,CHARACTER(n)          | 长度为n的定长字符串                                          |
+| VARCHAR(n),CHARACTERVARYING(n) | 最大长度为n的变长字符串                                      |
+| INT，INTEGER                   | 长整数(4字节)                                                |
+| SMALLINT                       | 短整数(2字节)                                                |
+| BIGINT                         | 大整数(8字节)                                                |
+| NUMERIC(p,d)                   | 定点数，由p位数字(不包括符号、小数点）组成，小数后面有d位数字 |
+| DECIMAL(p, d), DEC(p,d)        | 同NUMERIC                                                    |
+| DATE                           | 日期,包含年、月、日，格式为YYYY-MM-DD                        |
+| TIME                           | 时间，包含一日的时、分、秒，格式为HH:MM:SS                   |
+
+## 14 聚合函数
+
+| 聚合函数名及参数             | 功能                                 |
+| ---------------------------- | ------------------------------------ |
+| COUNT(\*\|<列名>)            | 统计元组个数                         |
+| COUNT([DISTINCT\|ALL]<列名>) | 统计一列中值的个数                   |
+| SUM([DISTINCT\|ALL]<列名>)   | 计算一列值的总和（此列必须为数值型） |
+| AVG([DISTINCT\|ALL]<列名>)   | 计算一列值的平均值(此列必须为数值型) |
+| MAX([DISTINCT\|ALL]<列名>)   | 求一列中的最大值                     |
+| MIN([DISTINCT\|ALL]<列名>)   | 求一列中的最小值                     |
+
+## 15 逻辑运算符
+
+| 逻辑运算符 | 描述   |
+| ---------- | ------ |
+| and &&     | 与     |
+| or         | 或     |
+| not !      | 非     |
+| xor        | 异或   |
+| &          | 位与   |
+| \|         | 位或   |
+| ^          | 位异或 |
+| <<         | 位左移 |
+| >>         | 位右移 |
+
+## 16 常用函数
+
+| 函数          | 描述         |
+| ------------- | ------------ |
+| CONCAT()      | 字符串拼接   |
+| LOWER/UPPER() | 大小写改变   |
+| REPLACE()     | 字符串替换   |
+| SUBSTRING():  | 截取子字符串 |
+| CEIL()        | 向上取整     |
+| FLOOR()       | 向下取整     |
+| rand()        | 生成随机数   |
+
+```sql
+select CONCAT('我是',name,depart)
+from Employee1;
+
+select LOWER('ASERDFTY');
+select UPPER('qwertyyu');
+
+select SUBSTRING('这是一个字符串',3,5);
+
+select CEIL(3.3);
+
+select FLOOR(3.3);
+
+select rand();
+```
+
+## 17 列操作
+
+```sql
+增加列：
+alter table tableName add columnName varchar(30);
+
+修改列类型：
+alter table tableName alter column columnName varchar(4000)  
+
+修改列的名称：
+EXEC  sp_rename   'tableName.column1' , 'column2'  (把表名为tableName的column1列名修改为column2)
+
+删除列： 
+alter table tableName drop column columnName
+
+创建唯一值索引
+ALTER TABLE `supplier` ADD UNIQUE (`supplierno`);//默认升序
+
+添加降序唯一值索引
+CREATE UNIQUE INDEX categoryname ON category (categoryname DESC);
+
+删除列唯一值约束
+ALTER TABLE student DROP CONSTRAINT weixin
+
+
+mysql
+查看表的字段信息：desc 表名;
+查看表的所有信息：show create table 表名;
+添加主键约束：alter table 表名 add constraint 主键 （形如：PK_表名） primary key 表名(主键字段);
+添加外键约束：alter table 从表 add constraint 外键（形如：FK_从表_主表） foreign key 从表(外键字段) references 主表(主键字段);
+删除主键约束：alter table 表名 drop primary key;
+删除外键约束：alter table 表名 drop foreign key 外键（区分大小写）;
+修改表名：alter table t_book rename to bbb;
+添加列：alter table 表名 add column 列名 varchar(30);
+删除列：alter table 表名 drop column 列名;
+修改列名MySQL： alter table bbb change nnnnn hh int;
+修改列名SQLServer：exec sp_rename't_student.name','nn','column';
+修改列名Oracle：alter table bbb rename column nnnnn to hh int;
+修改列属性：alter table t_book modify name varchar(22);
+```
+
+# 视图
+
+## 1 创建视图
+
+```
+create view v1 as
+select * from A;
+```
+
+## 2 修改视图
+
+```sql
+alter view 视图名 as 新的查询语句
+create or replace view 视图名 as 新的查询语句  //创建新的或者替换新的 
+```
+
+## 3 删除
+
+```
+drop view v1
+```
+
+## 4 修改
+
+```
+alter view v1 as select *  from A where A.id > 23;
+```
+
+## 5 查询视图
+
+```
+select * from v1;
+```
+
+## 6 数据操作
+
+视图数据操作:直接对视图进行写操作（增删改）然后实现基表数据的变化
+
+视图所有的数据操作都是最终对基表的数据操作
+视图操作条件
+
+     多基表视图:不允许操作(增删改都不行)。
+    
+     单基表视图:允许增删改
+    
+      新增条件:视图的字段必须包含基表中所有不允许为空的字段
+
+with check option:操作检查规则
+  默认不需要这个规则（创建视图时指定)︰视图操作只要满足前面上述条件即可
+  增加此规则:视图的数据操作后，必须要保证该视图还能把通过视图操作的数据查出来（否则失败)
+
+## 7 视图作用
+
+1、简化数据查询
+
+2、使用户多角度看待同一数据
+
+3、提供一定程度的逻辑独立性
+
+4、提供数据库安全性
+
+# 游标
+
+## 1 自定义
+
+自定义数据类型
+
+```sql
+//创建自定义类型create type type_name from system_type [null | not null]
+```
+
+## 2 定义游标
+
+```sql
+declare coursor_name [insensitive] [scroll] cursor
+for select_statement//(mysql只能在存储过程中使用)
+DELIMITER//
+CREATE PROCEDURE gsy()
+as
+BEGIN
+DECLARE gs CURSOR
+FOR
+SELECT saleprice FROM goods
+WHERE goods.categoryno=(SELECT categoryno FROM category WHERE categoryname='咖啡');
+END//
+
+
+declare @gname varchar(20),@gsalep float//定义数据变量
+declare gs scroll cursor//定义游标   scroll可以自由移动游标insensitive表明会对选取的数据存放在临时表里，游标数据不随基本表改变而变
+for select goodsname,saleprice//游标选取数据
+from goods join categoryon category.categoryno=goods.categorynowhere category.categoryname='咖啡'
+for update//可以更新数据   read only不允许更新数据
+open gs//打开游标
+fetch next from gs into @gname,@gsalep//通过游标取值while @@fetch_status=0//遍历条件
+begin
+update goods set saleprice=saleprice-saleprice*0.1
+where current of gs
+fetch next from gs//游标移动
+end
+close gs//关闭游标
+deallocate gs//释放游标
+
+
+游标遍历
+while @@fetch_status=0
+```
+
+# 触发器
+
+```sql
+create trigger inst//定义触发器
+on salebill//绑定对象
+after insert//指明触发类型和操作 触发类型：（for和after）|instead of（替换） 操作类型：delete，update，insert
+as  declare @numbe int//定义变量
+declare @good varchar(10)
+select @numbe=number from inserted//给变量赋值，可以用set语句
+select @good=goodsno from inserted
+if(select number from goods where goodsno=@good)<@numbe
+begin
+print '数量不足'
+end  else
+begin
+update goods set number=number-@numbe where goodsno=@good
+if(select number from goods where goodsno=@good)<10
+begin
+print '该商品数量小于10，低于安全库存量，请及时进货'
+end
+end
+go
+insert into salebill values('gn006','s04','2021-10-02 00:00:00.000',4)
+drop trigger inst
+```
+
+# 存储过程
+
+```sql
+go
+create procedure search//创建存储过程
+@cate varchar(20) output//指定传入参数类型，是否有输出
+as
+if @cate in (select categoryname from category)//编写语句
+begin
+select * from goods
+join category
+on goods.categoryno=category.categoryno
+where category.categoryname=@cate
+end
+else
+print '没有此类商品' 
+
+execute search '咖啡'//执行存储过程
+drop procedure search//删除存储过程
+```
+
+# 函数
+
+```sql
+create function find(@start date,@end date)
+returns table//返回类型as//后跟sql语句
+return select goodsno,sum(number)as salenumber from salebill
+where happentime between @start and @end
+group by goodsno
+
+select * from dbo.find('2020-01-01','2020-12-30')//dbo可以操作方法
+```
+
+# 关系数据理论
+
+`属于（元素与集合之间），包含（集合与集合之间）`
+
+## 关系模式的形式化定义
+
+```sql
+R(U,D,DOM,F)R：关系名U：属性名集合D：属性组U中属性所来自的域DOM：属性向域的映像集合F：属性间数据的依赖关系集合
+```
+
+## 关系模型常见问题
+
+1、数据冗余
+
+2、更新异常
+
+- 插入异常
+- 更新异常
+- 删除异常
+
+## 侯选码
+
+- 候选码可以唯一地识别关系的元组。
+- 包含在任何一个候选码中的属性，叫做主属性。不包含在任何候选码中的属性称为非主属性或非码属性。
+- 最简单的情况下，候选码只包含一个属性。
+- 最复杂的情况下，候选码包含关系模式的所有属性，称为全码。
+
+## 外码的定义
+
+关系模式R中属性或属性组X并非R的码，但X是另一个关系模式的码，则称X是R的外部码，简称外码。
+
+## 范式
+
+### 第一范式
+
+**如果一个关系模式R的所有属性都是不可分的基本数据项（所有数据项不能再分）**，则R是第一范式，简称1NF
+
+第一范式是对关系模式的最起码的要求。满足第一范式的关系称为规范化关系。不满足第一范式的数据库模式不能称为关系数据库。
+
+### 第二范式
+
+若关系模式R属于1NF，且每一个非主属性都完全函数依赖于码，则称R为第二范式，简称2NF
+
+**第二范式不存在部分函数依赖，可存在传递依赖**
+
+### 第三范式
+
+如果关系R为2NF，并且R中每一个非主属性都不传递依赖于R的候选码，则称R为第三范式
+
+**第三范式不存在部分函数依赖，传递函数依赖**
+
+### BC范式
+
+关系模式是1NF，如果对于R的每个函数依赖X→Y,若Y不属于X时X必含有候选码，则称R为BC范式，简称BCNF
+
+**BCNF的定义可以这样理解:如果关系R为1NF，并且R中不存在任何属性对码的部分依赖或传递依赖，那么称R为BCNF。**
+
+### 第四范式
+
+**BCFN消除非平凡且非函数依赖的多值依赖**
+
+# 数据库管理
+
+```sql
+create login login1 with password ='stu1';//创建登录用户
+create user stu1 for login login1;
+create login login2 with password ='stu2';
+create user stu2 for login login2;
+create login login3 with password ='stu3';
+create user stu3 for login login3;
+
+grant select,insert on salebill to stu1;//赋予用户权限
+grant select,update,insert,delete on student to stu1;
+grant select,update,insert,delete on goods to stu1;
+
+revoke select on salebill to stu1//移除用户权限
+revoke update,insert on student to stu1
+revoke delete on goods to stu1
+
+drop login login1;//删除用户，登录用户
+drop login login2;
+drop login login3;
+drop user stu1;
+drop user stu2;
+drop user stu3;
+
+
+//查看登录账号
+execute sp_helplogins['login']//login指登录账号名
+select * from sys.syslogins
+
+//查看数据库用户
+execute sp_helpuser['user_name']
+select * from sys.sysusers
+```
