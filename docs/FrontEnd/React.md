@@ -811,7 +811,7 @@ class Login extends React.Component {
 
 ### react生命周期（旧）
 
-![](./images/react%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%88%E6%97%A7%EF%BC%89.png)
+![](../images/react%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%88%E6%97%A7%EF%BC%89.png)
 
 ```js
 //正常更新
@@ -957,7 +957,7 @@ class A extends React.Component {
 
 ### react生命周期(新)
 
-![](./images/react%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%96%B0.png)
+![](../images/react%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%96%B0.png)
 
 17版本中三个UNSAFE方法
 
@@ -1508,7 +1508,7 @@ module.exports = override(
 
 + 作用:集中式管理react应用中多个组件共享的状态
 
-![redux原理图](images/redux原理图.png)
+![redux原理图](../images/redux原理图.png)
 
 ### 三个核心概念
 
@@ -1587,8 +1587,6 @@ export default createStore(countReducer)
 
 2.constant.js放置由于编码疏忽写错的type值
 
-
-
 异步action
 
 需要安装`npm i redux-thunk`
@@ -1609,15 +1607,15 @@ export default createStore(countReducer, applyMiddleware(thunk))
 
 ### react-redux
 
-![react-redux模型图](images/react-redux模型图.png)
+![react-redux模型图](../images/react-redux模型图.png)
 
 安装`npm i react-redux`
 
 ```jsx
 //App.jsx
 <div>
-	{/* store需要使用props的形式引入 */}
-	<Count store={store}></Count>
+ {/* store需要使用props的形式引入 */}
+ <Count store={store}></Count>
 </div>
 ```
 
@@ -1826,21 +1824,21 @@ export default createStore(allReducer, composeWithDevTools(applyMiddleware(thunk
 ### setState更新状态的2种写法
 
 ```
-	(1). setState(stateChange, [callback])------对象式的setState
+ (1). setState(stateChange, [callback])------对象式的setState
             1.stateChange为状态改变对象(该对象可以体现出状态的更改)
             2.callback是可选的回调函数, 它在状态更新完毕、界面也更新后(render调用后)才被调用
-					
-	(2). setState(updater, [callback])------函数式的setState
+     
+ (2). setState(updater, [callback])------函数式的setState
             1.updater为返回stateChange对象的函数。
             2.updater可以接收到state和props。
             4.callback是可选的回调函数, 它在状态更新、界面也更新后(render调用后)才被调用。
 总结:
-		1.对象式的setState是函数式的setState的简写方式(语法糖)
-		2.使用原则：
-				(1).如果新状态不依赖于原状态 ===> 使用对象方式
-				(2).如果新状态依赖于原状态 ===> 使用函数方式
-				(3).如果需要在setState()执行后获取最新的状态数据, 
-					要在第二个callback函数中读取
+  1.对象式的setState是函数式的setState的简写方式(语法糖)
+  2.使用原则：
+    (1).如果新状态不依赖于原状态 ===> 使用对象方式
+    (2).如果新状态依赖于原状态 ===> 使用函数方式
+    (3).如果需要在setState()执行后获取最新的状态数据, 
+     要在第二个callback函数中读取
 ```
 
 ```jsx
@@ -1860,22 +1858,18 @@ add = () => {
     })
 ```
 
-
-
 ------
-
-
 
 ## 2. lazyLoad
 
 ### 路由组件的lazyLoad
 
 ```js
-	//1.通过React的lazy函数配合import()函数动态加载路由组件 ===> 路由组件代码会被分开打包
-	const Login = lazy(()=>import('@/pages/Login'))
-	
-	//2.通过<Suspense>指定在加载得到路由打包文件前显示一个自定义loading界面
-	<Suspense fallback={<h1>loading.....</h1>}>
+ //1.通过React的lazy函数配合import()函数动态加载路由组件 ===> 路由组件代码会被分开打包
+ const Login = lazy(()=>import('@/pages/Login'))
+ 
+ //2.通过<Suspense>指定在加载得到路由打包文件前显示一个自定义loading界面
+ <Suspense fallback={<h1>loading.....</h1>}>
         <Switch>
             <Route path="/xxx" component={Xxxx}/>
             <Redirect to="/login"/>
@@ -1883,11 +1877,7 @@ add = () => {
     </Suspense>
 ```
 
-
-
 ------
-
-
 
 ## 3. Hooks
 
@@ -1938,11 +1928,9 @@ add = () => {
 (4). 可以把 useEffect Hook 看做如下三个函数的组合
         componentDidMount()
         componentDidUpdate()
-    	componentWillUnmount()
+     componentWillUnmount()
 不传第二个参数监视所有，传入空数组当做componentDidMount使用，
 ```
-
-
 
 #### 5. Ref Hook
 
@@ -2045,26 +2033,20 @@ export default Demo
 
 ```
 
-
-
 ------
-
-
 
 ## 4. Fragment
 
 ### 使用
 
-	<Fragment><Fragment>
-	只能有一个key属性
-	<></>
-	不能有任何属性
+ <Fragment><Fragment>
+ 只能有一个key属性
+ <></>
+ 不能有任何属性
 
 ### 作用
 
 > 可以不用必须有一个真实的DOM根标签了
-
-
 
 <hr/>
 
@@ -2078,32 +2060,32 @@ export default Demo
 
 ```js
 1) 创建Context容器对象：
-	const XxxContext = React.createContext()  
-	
+ const XxxContext = React.createContext()  
+ 
 2) 渲染子组时，外面包裹xxxContext.Provider, 通过value属性给后代组件传递数据：
-	<xxxContext.Provider value={数据}>
-		子组件
+ <xxxContext.Provider value={数据}>
+  子组件
     </xxxContext.Provider>
     
 3) 后代组件读取数据：
 
-	//第一种方式:仅适用于类组件 
-	  static contextType = xxxContext  // 声明接收context
-	  this.context // 读取context中的value数据
-	  
-	//第二种方式: 函数组件与类组件都可以
-	  <xxxContext.Consumer>
-	    {
-	      value => ( // value就是context中的value数据
-	        要显示的内容
-	      )
-	    }
-	  </xxxContext.Consumer>
+ //第一种方式:仅适用于类组件 
+   static contextType = xxxContext  // 声明接收context
+   this.context // 读取context中的value数据
+   
+ //第二种方式: 函数组件与类组件都可以
+   <xxxContext.Consumer>
+     {
+       value => ( // value就是context中的value数据
+         要显示的内容
+       )
+     }
+   </xxxContext.Consumer>
 ```
 
 ### 注意
 
-	在应用开发中一般不用context, 一般都用它的封装react插件
+ 在应用开发中一般不用context, 一般都用它的封装react插件
 
 ```jsx
 import React, { Component } from 'react'
@@ -2173,14 +2155,11 @@ function C() {
 }
 ```
 
-
-
 <hr/>
-
 
 ## 6. 组件优化
 
-### Component的2个问题 
+### Component的2个问题
 
 > 1. 只要执行setState(),即使不改变状态数据, 组件也会重新render() ==> 效率低
 >
@@ -2188,24 +2167,24 @@ function C() {
 
 ### 效率高的做法
 
->  只有当组件的state或props数据发生改变时才重新render()
+> 只有当组件的state或props数据发生改变时才重新render()
 
 ### 原因
 
->  Component中的shouldComponentUpdate()总是返回true
+> Component中的shouldComponentUpdate()总是返回true
 
 ### 解决
 
-	办法1: 
-		重写shouldComponentUpdate()方法
-		比较新旧state或props数据, 如果有变化才返回true, 如果没有返回false
-	办法2:  
-		使用PureComponent
-		PureComponent重写了shouldComponentUpdate(), 只有state或props数据有变化才返回true
-		注意: 
-			只是进行state和props数据的浅比较, 如果只是数据对象内部数据变了, 返回false  
-			不要直接修改state数据, 而是要产生新数据
-	项目中一般使用PureComponent来优化
+ 办法1:
+  重写shouldComponentUpdate()方法
+  比较新旧state或props数据, 如果有变化才返回true, 如果没有返回false
+ 办法2:  
+  使用PureComponent
+  PureComponent重写了shouldComponentUpdate(), 只有state或props数据有变化才返回true
+  注意:
+   只是进行state和props数据的浅比较, 如果只是数据对象内部数据变了, 返回false  
+   不要直接修改state数据, 而是要产生新数据
+ 项目中一般使用PureComponent来优化
 
 ```jsx
 import React, { PureComponent } from 'react'
@@ -2264,34 +2243,31 @@ class Child extends PureComponent {
 }
 ```
 
-
-
 <hr/>
-
 
 ## 7. render props
 
 ### 如何向组件内部动态传入带内容的结构(标签)?
 
-	Vue中: 
-		使用slot技术, 也就是通过组件标签体传入结构  <A><B/></A>
-	React中:
-		使用children props: 通过组件标签体传入结构
-		使用render props: 通过组件标签属性传入结构,而且可以携带数据，一般用render函数属性
+ Vue中:
+  使用slot技术, 也就是通过组件标签体传入结构  <A><B/></A>
+ React中:
+  使用children props: 通过组件标签体传入结构
+  使用render props: 通过组件标签属性传入结构,而且可以携带数据，一般用render函数属性
 
 ### children props
 
-	<A>
-	  <B>xxxx</B>
-	</A>
-	{this.props.children}
-	问题: 如果B组件需要A组件内的数据, ==> 做不到 
+ <A>
+   <B>xxxx</B>
+ </A>
+ {this.props.children}
+ 问题: 如果B组件需要A组件内的数据, ==> 做不到
 
 ### render props
 
-	<A render={(data) => <C data={data}></C>}></A>
-	A组件: {this.props.render(内部state数据)}
-	C组件: 读取A组件传入的数据显示 {this.props.data} 
+ <A render={(data) => <C data={data}></C>}></A>
+ A组件: {this.props.render(内部state数据)}
+ C组件: 读取A组件传入的数据显示 {this.props.data}
 
 ```jsx
 import React, { Component } from 'react'
@@ -2339,21 +2315,19 @@ class B extends Component {
 }
 ```
 
-
-
 <hr/>
 
 ## 8. 错误边界
 
-#### 理解：
+#### 理解
 
 错误边界(Error boundary)：用来捕获后代组件错误，渲染出备用页面
 
-#### 特点：
+#### 特点
 
 只能捕获后代组件生命周期产生的错误，不能捕获自己组件产生的错误和其他组件在合成事件、定时器中产生的错误
 
-##### 使用方式：
+##### 使用方式
 
 getDerivedStateFromError配合componentDidCatch
 
@@ -2403,37 +2377,31 @@ export default class Parent extends Component {
 }
 ```
 
-
-
 ## 9. 组件通信方式总结
 
-#### 组件间的关系：
+#### 组件间的关系
 
-- 父子组件
-- 兄弟组件（非嵌套组件）
-- 祖孙组件（跨级组件）
++ 父子组件
++ 兄弟组件（非嵌套组件）
++ 祖孙组件（跨级组件）
 
+#### 几种通信方式
 
+  1.props：
+   (1).children props
+   (2).render props
+  2.消息订阅-发布：
+   pubs-sub、event等等
+  3.集中式管理：
+   redux、dva等等
+  4.context:
+   生产者-消费者模式
 
-#### 几种通信方式：
+#### 比较好的搭配方式
 
-		1.props：
-			(1).children props
-			(2).render props
-		2.消息订阅-发布：
-			pubs-sub、event等等
-		3.集中式管理：
-			redux、dva等等
-		4.context:
-			生产者-消费者模式
-
-#### 比较好的搭配方式：
-
-		父子组件：props
-		兄弟组件：消息订阅-发布、集中式管理
-		祖孙组件(跨级组件)：消息订阅-发布、集中式管理、context(开发用的少，封装插件用的多)
-
-
+  父子组件：props
+  兄弟组件：消息订阅-发布、集中式管理
+  祖孙组件(跨级组件)：消息订阅-发布、集中式管理、context(开发用的少，封装插件用的多)
 
 # React Router 6
 
@@ -2461,7 +2429,7 @@ export default class Parent extends Component {
 
 ### 1. `<BrowserRouter>`
 
-1. 说明：`<BrowserRouter> `用于包裹整个应用。
+1. 说明：`<BrowserRouter>`用于包裹整个应用。
 
 2. 示例代码：
 
@@ -2480,7 +2448,7 @@ export default class Parent extends Component {
 ### 2. `<HashRouter>`
 
 1. 说明：作用与`<BrowserRouter>`一样，但`<HashRouter>`修改的是地址栏的hash值。
-2. 备注：6.x版本中`<HashRouter>`、`<BrowserRouter> ` 的用法与 5.x 相同。
+2. 备注：6.x版本中`<HashRouter>`、`<BrowserRouter>` 的用法与 5.x 相同。
 
 ### 3. `<Routes/> 与 <Route/>`
 
@@ -2492,7 +2460,7 @@ export default class Parent extends Component {
 
 4. `<Route caseSensitive>` 属性用于指定：匹配时是否区分大小写（默认为 false）。
 
-5. 当URL发生变化时，`<Routes> `都会查看其所有子` <Route>` 元素以找到最佳匹配并呈现组件 。
+5. 当URL发生变化时，`<Routes>`都会查看其所有子`<Route>` 元素以找到最佳匹配并呈现组件 。
 
 6. `<Route>` 也可以嵌套使用，且可配合`useRoutes()`配置 “路由表” ，但需要通过 `<Outlet>` 组件来渲染其子路由。
 
@@ -2503,14 +2471,14 @@ export default class Parent extends Component {
        /*path属性用于定义路径，element属性用于定义当前路径所对应的组件*/
        <Route path="/login" element={<Login />}></Route>
    
-   		/*用于定义嵌套路由，home是一级路由，对应的路径/home*/
+     /*用于定义嵌套路由，home是一级路由，对应的路径/home*/
        <Route path="home" element={<Home />}>
           /*test1 和 test2 是二级路由,对应的路径是/home/test1 或 /home/test2*/
          <Route path="test1" element={<Test/>}></Route>
          <Route path="test2" element={<Test2/>}></Route>
-   		</Route>
-   	
-   		//Route也可以不写element属性, 这时就是用于展示嵌套的路由 .所对应的路径是/users/xxx
+     </Route>
+    
+     //Route也可以不写element属性, 这时就是用于展示嵌套的路由 .所对应的路径是/users/xxx
        <Route path="users">
           <Route path="xxx" element={<Demo />} />
        </Route>
@@ -2531,7 +2499,7 @@ export default class Parent extends Component {
    function Test() {
      return (
        <div>
-       	<Link to="/路径">按钮</Link>
+        <Link to="/路径">按钮</Link>
        </div>
      );
    }
@@ -2556,8 +2524,8 @@ export default class Parent extends Component {
    >login</NavLink>
    
    /*
-   	默认情况下，当Home的子组件匹配成功，Home的导航也会高亮，
-   	当NavLink上添加了end属性后，若Home的子组件匹配成功，则Home的导航没有高亮效果。
+    默认情况下，当Home的子组件匹配成功，Home的导航也会高亮，
+    当NavLink上添加了end属性后，若Home的子组件匹配成功，则Home的导航没有高亮效果。
    */
    <NavLink to="home" end >home</NavLink>
    ```
@@ -2575,15 +2543,15 @@ export default class Parent extends Component {
    import {Navigate} from 'react-router-dom'
    
    export default function Home() {
-   	const [sum,setSum] = useState(1)
-   	return (
-   		<div>
-   			<h3>我是Home的内容</h3>
-   			{/* 根据sum的值决定是否切换视图 */}
-   			{sum === 1 ? <h4>sum的值为{sum}</h4> : <Navigate to="/about" replace={true}/>}
-   			<button onClick={()=>setSum(2)}>点我将sum变为2</button>
-   		</div>
-   	)
+    const [sum,setSum] = useState(1)
+    return (
+     <div>
+      <h3>我是Home的内容</h3>
+      {/* 根据sum的值决定是否切换视图 */}
+      {sum === 1 ? <h4>sum的值为{sum}</h4> : <Navigate to="/about" replace={true}/>}
+      <button onClick={()=>setSum(2)}>点我将sum变为2</button>
+     </div>
+    )
    }
    ```
 
@@ -2621,23 +2589,23 @@ export default class Parent extends Component {
    import {NavLink,Outlet} from 'react-router-dom'
    
    export default function Home() {
-   	return (
-   		<div>
-   			<h2>Home组件内容</h2>
-   			<div>
-   				<ul className="nav nav-tabs">
-   					<li>
-   						<NavLink className="list-group-item" to="news">News</NavLink>
-   					</li>
-   					<li>
-   						<NavLink className="list-group-item" to="message">Message</NavLink>
-   					</li>
-   				</ul>
-   				{/* 指定路由组件呈现的位置 */}
-   				<Outlet />
-   			</div>
-   		</div>
-   	)
+    return (
+     <div>
+      <h2>Home组件内容</h2>
+      <div>
+       <ul className="nav nav-tabs">
+        <li>
+         <NavLink className="list-group-item" to="news">News</NavLink>
+        </li>
+        <li>
+         <NavLink className="list-group-item" to="message">Message</NavLink>
+        </li>
+       </ul>
+       {/* 指定路由组件呈现的位置 */}
+       <Outlet />
+      </div>
+     </div>
+    )
    }
    
    ```
@@ -2657,18 +2625,18 @@ export default class Parent extends Component {
    import {Navigate} from 'react-router-dom'
    
    export default [
-   	{
-   		path:'/about',
-   		element:<About/>
-   	},
-   	{
-   		path:'/home',
-   		element:<Home/>
-   	},
-   	{
-   		path:'/',
-   		element:<Navigate to="/about"/>
-   	}
+    {
+     path:'/about',
+     element:<About/>
+    },
+    {
+     path:'/home',
+     element:<Home/>
+    },
+    {
+     path:'/',
+     element:<Navigate to="/about"/>
+    }
    ]
    
    //App.jsx
@@ -2677,16 +2645,16 @@ export default class Parent extends Component {
    import routes from './routes'
    
    export default function App() {
-   	//根据路由表生成对应的路由规则
-   	const element = useRoutes(routes)
-   	return (
-   		<div>
-   			......
+    //根据路由表生成对应的路由规则
+    const element = useRoutes(routes)
+    return (
+     <div>
+      ......
          {/* 注册路由 */}
          {element}
-   		  ......
-   		</div>
-   	)
+       ......
+     </div>
+    )
    }
    
    ```
@@ -2759,20 +2727,20 @@ export default class Parent extends Component {
    import {useSearchParams} from 'react-router-dom'
    
    export default function Detail() {
-   	const [search,setSearch] = useSearchParams()
-   	const id = search.get('id')
-   	const title = search.get('title')
-   	const content = search.get('content')
-   	return (
-   		<ul>
-   			<li>
-   				<button onClick={()=>setSearch('id=008&title=哈哈&content=嘻嘻')}>点我更新一下收到的search参数</button>
-   			</li>
-   			<li>消息编号：{id}</li>
-   			<li>消息标题：{title}</li>
-   			<li>消息内容：{content}</li>
-   		</ul>
-   	)
+    const [search,setSearch] = useSearchParams()
+    const id = search.get('id')
+    const title = search.get('title')
+    const content = search.get('content')
+    return (
+     <ul>
+      <li>
+       <button onClick={()=>setSearch('id=008&title=哈哈&content=嘻嘻')}>点我更新一下收到的search参数</button>
+      </li>
+      <li>消息编号：{id}</li>
+      <li>消息标题：{title}</li>
+      <li>消息内容：{content}</li>
+     </ul>
+    )
    }
    
    ```
@@ -2788,25 +2756,25 @@ export default class Parent extends Component {
    import {useLocation} from 'react-router-dom'
    
    export default function Detail() {
-   	const x = useLocation()
-   	console.log('@',x)
+    const x = useLocation()
+    console.log('@',x)
      // x就是location对象: 
-   	/*
-   		{
+    /*
+     {
          hash: "",
          key: "ah9nv6sz",
          pathname: "/login",
          search: "?name=zs&age=18",
          state: {a: 1, b: 2}
        }
-   	*/
-   	return (
-   		<ul>
-   			<li>消息编号：{id}</li>
-   			<li>消息标题：{title}</li>
-   			<li>消息内容：{content}</li>
-   		</ul>
-   	)
+    */
+    return (
+     <ul>
+      <li>消息编号：{id}</li>
+      <li>消息标题：{title}</li>
+      <li>消息内容：{content}</li>
+     </ul>
+    )
    }
    
      
@@ -2829,19 +2797,19 @@ export default class Parent extends Component {
      console.log(match) //输出match对象
      //match对象内容如下：
      /*
-     	{
+      {
          params: {x: '1', y: '10'}
          pathname: "/LoGin/1/10"  
          pathnameBase: "/LoGin/1/10"
          pattern: {
-         	path: '/login/:x/:y', 
-         	caseSensitive: false, 
-         	end: false
+          path: '/login/:x/:y', 
+          caseSensitive: false, 
+          end: false
          }
        }
      */
      return (
-     	<div>
+      <div>
          <h1>Login</h1>
        </div>
      )
@@ -2850,7 +2818,7 @@ export default class Parent extends Component {
 
 ### 7. useInRouterContext()
 
-​			作用：如果组件在 `<Router>` 的上下文中呈现，则 `useInRouterContext` 钩子返回 true，否则返回 false。
+​   作用：如果组件在 `<Router>` 的上下文中呈现，则 `useInRouterContext` 钩子返回 true，否则返回 false。
 
 ### 8. useNavigationType()
 
@@ -2874,4 +2842,3 @@ export default class Parent extends Component {
 ### 10.useResolvedPath()
 
 1. 作用：给定一个 URL值，解析其中的：path、search、hash值。
-

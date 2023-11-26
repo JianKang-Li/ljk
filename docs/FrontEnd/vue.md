@@ -521,7 +521,7 @@ new Vue({
 
 + **oldVnode**: 上一个虚拟节点，仅在 `update` 和 `componentUpdated` 钩子中可用。
 
-![vue过程](./images/Vue.png)
+![vue过程](../images/Vue.png)
 
 ## 过渡和动画
 

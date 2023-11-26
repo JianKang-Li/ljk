@@ -108,9 +108,9 @@ cola|5
 
 * 可以使用`*`作为标记
 
-- 或者`-`
+* 或者`-`
 
-+ 也可以使用`+`
+* 也可以使用`+`
 
 有序列表--数字 `.`空格
 
@@ -118,7 +118,7 @@ cola|5
 
 2. 数字的序列并不会影响生成的列表序列；
 
-3.  但仍然推荐按照自然顺序编写；
+3. 但仍然推荐按照自然顺序编写；
 
    ```markdown
    可以使用：数字\.来取消显示为列表（反斜杠进行转义）
@@ -192,7 +192,7 @@ _______
 markdown画图也是轻量级的，功能并不全。
 Mcermaid是一个用于画流程图、状态图、时序图、甘特图的库，使用JS进行本地渲染，广泛集成于许多Markdown编辑器中。Mermaid作为一个使用]S渲染的库，生成的不是一个"图片"，而是一段HTML代码。
 
-######1、流程图
+###### 1、流程图
 
 ```流程图
 graph 方向描述
@@ -393,12 +393,12 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-	participant 99 as ljk
-	participant seller as 炸鸡店小哥
-	99->>seller:还有炸鸡吗？
-	seller-->>99:没有，要现炸。
-	99 -x +seller:给我炸
-	seller-->> -99:您的炸鸡好了！
+ participant 99 as ljk
+ participant seller as 炸鸡店小哥
+ 99->>seller:还有炸鸡吗？
+ seller-->>99:没有，要现炸。
+ 99 -x +seller:给我炸
+ seller-->> -99:您的炸鸡好了！
 ```
 
 注解（note）
@@ -595,9 +595,9 @@ pie
 
 ```markdown
 title 标题
-	dateFormat 日期格式
-	section 部分名
-	任务名:参数一, 参数二, 参数三, 参数四，参数五
+ dateFormat 日期格式
+ section 部分名
+ 任务名:参数一, 参数二, 参数三, 参数四，参数五
  
   //参数一：crit（是否重要，红框框） 或者 不填
   //参数二：done（已完成）、active（正在进行） 或者 不填(表示为待完成状态)
@@ -692,7 +692,6 @@ $$
 \end{matrix}
 \tag{1}
 $$
-
 
 $$
 \left(
