@@ -1,4 +1,5 @@
 * [C++](C++/)
+* [diy](diy/)
 * [FrontEnd](FrontEnd/)
 * [JavaWeb](JavaWeb/)
 * [Python](Python/)
