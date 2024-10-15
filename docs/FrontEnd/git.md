@@ -393,3 +393,41 @@ git push -u origin master
 ---在Git中具有特殊含义的字符，包括波浪线（~）、插入符（^)、冒号（:)、
 问号（？）、星号（*）、左方括号（[)。
      ——ASCII码控制字符，即值小于八进制\040的字符，或DEL字符（八进制\177)。
+
+## 查看git stash drop 的提交
+```shell
+#!/bin/sh
+READFILENAME="1.txt"      #上步文件名【1.txt dangling commit，2.txt对应unreachable commit】
+RETFILENAME="./ret.txt"   #筛选结果文件名
+git fsck --lost-found >> $READFILENAME
+while read -r line
+do
+    VAR=`echo $line | awk '/悬空 commit/ {print $3}'`
+    if [ $VAR ]; then
+        git show $VAR >> $RETFILENAME
+        echo "-------------------------------------\n" >>$RETFILENAME #每条记录用---分割开
+    fi
+done < $READFILENAME
+```
+
+## 提交前检查
+```shell
+#!/usr/bin/bash
+read -p "是否执行yarn lint: " LINT < /dev/tty
+if [ -z "${LINT}" ];then
+	exit 0
+fi
+echo 'pre-commit-hook'
+cd html
+yarn lint
+pid=$!
+result=$?
+wait $pid
+echo "result with yarn lint is: $result"
+if [ "$result" == 0 ]
+then
+  exit 0  #参数正确，退出状态为0
+else
+  exit 1  #参数错误，退出状态1
+fi
+```
