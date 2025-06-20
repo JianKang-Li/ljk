@@ -10,6 +10,7 @@
 * [SQL语句学习](SQL语句学习.md)
 * [study](study.md)
 * [vim的使用](vim的使用.md)
+* [wordpress](wordpress.md)
 * [前端书籍](前端书籍.md)
 * [操作系统](操作系统.md)
 * [数据结构与算法](数据结构与算法.md)
