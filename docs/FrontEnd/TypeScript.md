@@ -885,7 +885,7 @@ declare module Module_Name {
 TypeScript 引入声明文件语法格式：
 
 ```ts
-/// <reference path = " runoob.d.ts" />
+/// <reference path = "runoob.d.ts" />
 ```
 
 ### TS中实现导出接口类型的数组，并统一导出，实现接口导出
