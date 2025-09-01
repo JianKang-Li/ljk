@@ -50,3 +50,15 @@ dir /b %SystemRoot%\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientTools
 for /f %%i in ('findstr /i . List.txt 2^>nul') do dism /online /norestart /add-package:"%SystemRoot%\servicing\Packages\%%i" 
 pause
 ```
+
+## windows 安装 oh-my-posh
+参考教程:
+1. 安装 powershell 可应用商店安装
+2. 安装 oh-my-posh 可应用商店安装 `winget install JanDeDobbeleer.OhMyPosh`
+3. [创建配置文件](https://learn.microsoft.com/zh-cn/windows/terminal/tutorials/custom-prompt-setup#choose-and-apply-a-powershell-prompt-theme)
+4. 安装字体 oh-my-posh font install
+5. 设置 powershell 权限 (按需设置)
+
+教程链接：
+  1. https://learn.microsoft.com/zh-cn/windows/terminal/tutorials/custom-prompt-setup
+  2. https://ohmyposh.dev/docs/installation/windows
