@@ -89,3 +89,9 @@ python3.14 -m ensurepip --upgrade
   - **Pyenv**（推荐多版本管理）：安装 pyenv（`curl https://pyenv.run | bash`），然后 `pyenv install 3.14.0 && pyenv global 3.14.0`。更灵活，无需 root。
   - **升级 Ubuntu**：若可能，升级到 22.04 或 24.04，使用 `sudo apt install python3.14`（官方支持）。
 - **为什么源代码**：20.04 已过标准支持期（至 2025 年 4 月），PPA 不兼容，但源安装稳定。
+
+## 激活虚拟环境
+`source ./venv/bin/activate`
+
+退出虚拟环境
+`deactivate`
