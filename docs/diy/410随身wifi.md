@@ -28,7 +28,7 @@
 4. 进入9008 （wifi助手 05 再输入 1 重启后看到选择9008工具即可 设备管理器上会有9008）
 5. 打开miko 备份固件（Read-> Partition Backup/Erase->Load Partition Structure->全选-> Firmware Folder Path-> Read Full Image）
 6. 插拔随身wifi重启
-7. 刷入debian （解压固件-> 解压目录cmd-> `adb devices`-> `adb reboot bootloader`-> 双击flash.bat-> 按任意键（一直回车到all done）） 
+7. 刷入debian （解压固件-> 解压目录cmd-> `adb devices`-> `adb reboot bootloader`-> 双击flash.bat-> 按任意键（一直回车到all done））
 8. 打开设备管理器查看状态
    1. 其他设备显示 RNDIS （右键更新驱动，浏览我的电脑查找，从可用驱动中选择，网络适配器->Microsoft-> 基于远程NDIS的Internet 共享设备 到状态2 ）
    2. 网络适配器显示 基于远程NDIS的Internet 共享设备
@@ -61,7 +61,4 @@ sudo apt-mark unhold openssh-server
 echo -e 'nn5、系统程序更新完成！nn####################################nnnn'
 ```
 
-12. 完成系统安装
-
-
-
+1. 完成系统安装

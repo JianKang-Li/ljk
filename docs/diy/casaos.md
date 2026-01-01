@@ -22,4 +22,3 @@
 ## 默认设置
 
 casaos 官方app仓库地址`https://casaos.app/store/main.zip`
-

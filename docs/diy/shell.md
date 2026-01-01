@@ -38,8 +38,8 @@ function gs {
 }
 ```
 
-
 ## windows11 没有本地策略
+
 ```powershell
 @echo off 
 pushd "%~dp0" 
@@ -52,7 +52,9 @@ pause
 ```
 
 ## windows 安装 oh-my-posh
+
 参考教程:
+
 1. 安装 powershell 可应用商店安装
 2. 安装 oh-my-posh 可应用商店安装 `winget install JanDeDobbeleer.OhMyPosh`
 3. [创建配置文件](https://learn.microsoft.com/zh-cn/windows/terminal/tutorials/custom-prompt-setup#choose-and-apply-a-powershell-prompt-theme)
@@ -60,5 +62,6 @@ pause
 5. 设置 powershell 权限 (按需设置)
 
 教程链接：
-  1. https://learn.microsoft.com/zh-cn/windows/terminal/tutorials/custom-prompt-setup
-  2. https://ohmyposh.dev/docs/installation/windows
+
+  1. <https://learn.microsoft.com/zh-cn/windows/terminal/tutorials/custom-prompt-setup>
+  2. <https://ohmyposh.dev/docs/installation/windows>
