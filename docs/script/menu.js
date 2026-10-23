@@ -1,6 +1,6 @@
 const fs = require('fs').promises
 const path = require('path')
-const ignore = ['.gitignore', '.nojekyll', 'favicon.ico', '_sidebar.md','index.html']
+const ignore = ['.gitignore', '.nojekyll', 'favicon.ico', '_sidebar.md', 'index.html']
 const ignoreDir = ['images', 'script']
 
 // 循环获取目录和文件列表
@@ -32,31 +32,75 @@ async function getAllFilesAndDirs(dirPath) {
   return fileList
 }
 
-// 创建目录内容
-function generateSidebar(data, dir = '', parentPath = '') {
-  let sidebar = ''
-
-  const files = data.files.map(file => {
-    const filePath = path.join(file)
-    const { name } = path.parse(filePath)
-    return `* [${name}](${filePath})`
-  })
-
-  const subDirs = Object.keys(data.dirs).map(subDir => {
-    const subDirPath = path.join(parentPath, subDir)
-    sidebar += `* [${subDir}](${subDir}/)\n`
-    generateSidebar(data.dirs[subDir], subDir, subDirPath)
-  })
-
-  fs.writeFile(path.join(__dirname, parentPath, '_sidebar.md'), `${sidebar}${files.join('\n')}`, (err) => {
-    if (err) {
-      console.error('创建目录错误', err)
-      return
+// 解析已有 _sidebar.md，取条目链接顺序
+function parseSidebarOrder(content) {
+  const hrefs = []
+  for (const line of content.split('\n')) {
+    const match = line.match(/^\*\s+\[[^\]]*\]\(([^)]*)\)$/)
+    if (match) {
+      hrefs.push(match[1])
     }
-    console.log(`创建目录文件${path.join(__dirname, parentPath, '_sidebar.md')}成功`)
+  }
+  return hrefs
+}
+
+// 已有条目按原顺序排列，新增条目按名称排序追加，删除的条目自动剔除
+function sortEntries(entries, oldHrefs) {
+  const entryMap = new Map(entries.map(entry => [entry.href, entry]))
+  const sorted = []
+  for (const href of oldHrefs) {
+    const entry = entryMap.get(href)
+    if (entry) {
+      sorted.push(entry)
+      entryMap.delete(href)
+    }
+  }
+  sorted.push(...[...entryMap.values()].sort((a, b) => a.label.localeCompare(b.label, 'zh')))
+  return sorted
+}
+
+// 创建目录内容
+async function generateSidebar(data, parentPath = '') {
+  const sidebarPath = path.join(__dirname, parentPath, '_sidebar.md')
+
+  let oldHrefs = []
+  try {
+    oldHrefs = parseSidebarOrder(await fs.readFile(sidebarPath, 'utf-8'))
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
+      console.error('读取目录文件错误', err)
+    }
+  }
+
+  const subDirEntries = Object.keys(data.dirs).map(subDir => {
+    return { href: path.join(parentPath, subDir) + '/', label: subDir }
   })
+  const fileEntries = data.files.map(file => {
+    const { name } = path.parse(file)
+    return { href: file, label: name }
+  })
+
+  const subDirs = sortEntries(subDirEntries, oldHrefs)
+  const files = sortEntries(fileEntries, oldHrefs)
+
+  const sidebar = [
+    ...subDirs.map(entry => `* [${entry.label}](${entry.href})`),
+    ...files.map(entry => `* [${entry.label}](${entry.href})`)
+  ].join('\n')
+
+  try {
+    await fs.writeFile(sidebarPath, sidebar)
+    console.log(`创建目录文件${sidebarPath}成功`)
+  } catch (err) {
+    console.error('创建目录错误', err)
+    return
+  }
+
+  await Promise.all(Object.keys(data.dirs).map(subDir => {
+    return generateSidebar(data.dirs[subDir], path.join(parentPath, subDir))
+  }))
 }
 
 getAllFilesAndDirs('../').then(res => {
-  generateSidebar(res, '', '../')
+  return generateSidebar(res, '../')
 })

@@ -4,3 +4,4 @@
 * [README](README.md)
 * [shell](shell.md)
 * [油猴脚本开发](油猴脚本开发.md)
+* [copyparty-py](copyparty-py.md)
